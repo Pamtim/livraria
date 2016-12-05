@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+xmlns:h="http://xmlns.jcp.org/jsf/html"
+xmlns:f="http://primefaces.org/ui"
+xmlns:p="http://xmlns.jcp.org/jsf/core"
+xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+template="../template/template.xhtml">
+<ui:define name="conteudo">
+<h:form  id="formCad" >
+<f:fieldset id="principal"  legend="cadastro de Cliente" >
+<f:fieldset id="dados_pessoa" legend="Dados Pessoais" style="background:url('../resources/imagem/boss_icone.png') no-repeat right; height:260px;"  >
+<h:panelGrid columns="4" cellspacing="4" id="painel">
+<f:outputLabel for="nome" value="Nome"/>
+<f:inputText id="nome" placeholder="Digite seu Nome" value="#{clienteBean.cliente.nome}" required="true" requiredMessage="O campo 'Nome' é obrigatorio" size="25"/>
+<f:outputLabel for="end" value="Endereço"/>
+<f:inputText id="end" placeholder="Digite seu Endereco " rendered="true" value="#{clienteBean.cliente.endereco}" size="30"/>
+<f:outputLabel value="Barrio" for="barrio"/>
+<f:inputText value="#{clienteBean.cliente.barrio}" id="barrio" required="true" requiredMessage="O campo 'Barrio' é obrigatorio"/>
+<f:outputLabel value="Numero"/>
+<f:inputText  value="#{clienteBean.cliente.numero}" size="4"  validatorMessage="Digite um valor valido" maxlength="3"/>
+<f:outputLabel value="CPF" for="cpf"/>
+<f:inputMask mask="999.999.999.-99" id="cpf" value="#{clienteBean.cliente.cpf}" required="true" size="15"/>
+<f:outputLabel value="RG" for="rg"/>
+<f:inputMask mask="999999999-99"  id="rg" size="20" maxlength="18" value="#{clienteBean.cliente.rg}" required="true" requiredMessage="O campo  'RG' é obrigatorio"/>
+<f:outputLabel for="dat" value="Data Nascimento"/>
+<f:calendar id="dat" mask="dd/MM/yyyy" navigator="true"  required="true" size="13"  locale="pt" effect="slide" value="#{clienteBean.cliente.nascimento}">
+</f:calendar>
+<f:outputLabel value="Sexo" for="sexo"/>
+<f:selectOneRadio id="sexo" value="#{clienteBean.cliente.sexo}">
+<p:selectItem itemLabel="Masculino" itemValue="Masculino"/>
+<p:selectItem itemLabel="Feminino" itemValue="Feminino"/>
+</f:selectOneRadio>
+<f:outputLabel value="Estado"/>
+<f:selectOneMenu value="#{clienteBean.idEstado}"  filter="true">
+<p:selectItem itemLabel="Selecione um Estado" noSelectionOption="true"/>
+<p:selectItems value="#{clienteBean.estados}" var="estado" itemLabel="#{estado.nome}" itemValue="#{estado.id}"/>
+<f:ajax listener="#{clienteBean.dados_cidade}" update=":formCad:cidade"/>
+</f:selectOneMenu>
+<f:outputLabel value="Cidade" for="cidade" />
+<f:selectOneMenu value="#{clienteBean.idCidade}" id="cidade" filter="true" required="true" requiredMessage="O campo 'Cidade' é necessario!!">
+<p:selectItem itemLabel="Selecione uma Cidade" noSelectionOption="true"/>
+<p:selectItems value="#{clienteBean.cidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade.id}" />
+</f:selectOneMenu>
+</h:panelGrid>
+</f:fieldset>
+<f:fieldset legend="Contatos" style="background:url('../resources/imagem/contato.png') no-repeat left; height:190px;" >
+<h:panelGrid columns="2" style="padding-left:100px;">
+<f:outputLabel value="Email" for="email"/>
+<f:inputText value="#{clienteBean.cliente.email}" id="email" required="true" requiredMessage="O campo 'Email' é obrigatorio" size="30"/>
+<f:outputLabel value="Telefone "/>
+<f:inputMask mask="(99)99999-9999" size="16"  value="#{clienteBean.cliente.telefone}"/>
+</h:panelGrid>
+</f:fieldset>
+<br></br>
+<h:panelGrid columns="4" style="margin:auto;">
+<f:commandButton value="Cadastar" icon="ui-icon-check" onstart="PF('gif').show();" onsuccess="PF('gif').hide();" actionListener="#{clienteBean.Salvar}" update=":formCad:principal :mensagem"/>
+<f:commandButton value="Cancelar" icon="ui-icon-closethick" actionListener="#{clienteBean.novo}" update=":formCad:painel :mensagem"/>
+
+</h:panelGrid>
+<br></br>
+<p><span style='color:red;'> Atenção</span> Os campos com o caracter '*' são obrigatorios</p>
+</f:fieldset>
+</h:form>
+<f:dialog draggable="false" modal="true" resizable="false" closable="false" widgetVar="gif">
+<f:graphicImage library="imagem" name="carrega.gif"/>
+</f:dialog>
+</ui:define>
+</ui:composition>

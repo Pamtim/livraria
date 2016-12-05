@@ -1,0 +1,23 @@
+@CHARSET "ISO-8859-1";
+legend{
+	border:1px solid blue;
+}
+fieldset{
+	width:1000px;
+	 margin:auto;
+}
+dados_pessoa{
+	margin: 900px; 
+ height: 600px;
+ 
+}
+
+body{
+	background: rgba(0,0,0,0.1) ;
+	
+}
+#owl-banner.item img{
+    display: block;
+    width: 100%;
+    height: auto;
+}

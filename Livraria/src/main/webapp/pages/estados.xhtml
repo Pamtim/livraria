@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+xmlns:h="http://xmlns.jcp.org/jsf/html"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://xmlns.jcp.org/jsf/core"
+xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+template="../template/template.xhtml">
+<ui:define name="conteudo">
+<h:form id="formtable">
+<p:panel header="Estado-Listagem">
+<p:dataTable emptyMessage="Dados não encontrados" filteredValue="#{estadoBean.estadoFilter}" paginator="true"  var="estado" value="#{estadoBean.estados}" rows="5" id="table">
+<c:facet name="header">
+<p:commandButton value="Novo" onclick="PF('dialog').show();" actionListener="#{estadoBean.novo}" update="dlform:painel"></p:commandButton>
+</c:facet>
+<p:column headerText="Nome" sortBy="#{estado.nome}" filterMatchMode="contains" filterBy="#{estado.nome}">
+<p:outputLabel value="#{estado.nome}"/></p:column>
+<p:column headerText="Sigla" sortBy="#{estado.sigla}"><p:outputLabel value="#{estado.sigla}" style="text-align:center;"/></p:column>
+<p:column headerText="Opções"><p:commandButton icon="ui-icon-trash" actionListener="#{estadoBean.remove}" update=":formtable:table">
+<p:confirm header="Confimação" message="Dejeja excluir o estado ?" icon="ui-icon-alert"/>
+<c:attribute name="selecionado" value="#{estado}"/>
+</p:commandButton>
+<p:commandButton icon="ui-icon-pencil" actionListener="#{estadoBean.editaAdiciona}" oncomplete="PF('dialogEd').show();" update=":formtable:table :dlform2:painel2">
+<c:setPropertyActionListener value="#{estado}" target="#{estadoBean.estado}"/>
+</p:commandButton>
+</p:column>
+</p:dataTable>
+<p:confirmDialog global="true">
+<p:commandButton value="Sim" type="button" icon="ui-icon-check" styleClass="ui-confirmdialog-yes"></p:commandButton>
+<p:commandButton value="No" type="button" icon="ui-icon-close" styleClass="ui-confirmdialog-no"></p:commandButton>
+</p:confirmDialog>
+</p:panel>
+</h:form>
+<p:dialog header="Cadastro Estado" widgetVar="dialog" draggable="false" resizable="false" modal="true" >
+<h:form id="dlform">
+<h:panelGrid columns="2" id="painel">
+<p:outputLabel value="Nome: "/><p:inputText size="20" maxlength="18" placeholder="Digite o Estado" value="#{estadoBean.estado.nome}" />
+<p:outputLabel value="Sigla: "/><p:inputText size="8" maxlenqgth="3" placeholder="Sigla" value="#{estadoBean.estado.sigla}"/>
+</h:panelGrid>
+<h:panelGrid columns="2">
+<p:commandButton  value="Salvar" actionListener="#{estadoBean.salva()}" update=":mensagem :formtable:table :dlform:painel" ></p:commandButton>
+<p:commandButton value="Fechar" oncomplete="PF('dialog').hide();"></p:commandButton>
+</h:panelGrid>
+</h:form>
+</p:dialog>
+<p:dialog header="Edição de Estado" widgetVar="dialogEd" draggable="false" resizable="false" modal="true" >
+<h:form id="dlform2">
+<h:panelGrid columns="2" id="painel2">
+<p:outputLabel value="Nome: "/><p:inputText size="20" maxlength="18" placeholder="Digite o Estado" value="#{estadoBean.estado.nome}" />
+<p:outputLabel value="Sigla: "/><p:inputText size="8" maxlenqgth="3" placeholder="Sigla" value="#{estadoBean.estado.sigla}"/>
+</h:panelGrid>
+<h:panelGrid columns="2">
+<p:commandButton  value="Atualizar" actionListener="#{estadoBean.salva}" update=":mensagem :formtable:table :dlform2:painel2">
+</p:commandButton>
+<p:commandButton value="Fechar" oncomplete="PF('dialogEd').hide();"></p:commandButton>
+</h:panelGrid>
+</h:form>
+</p:dialog>
+</ui:define>
+</ui:composition>

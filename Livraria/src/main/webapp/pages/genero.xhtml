@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+xmlns:h="http://xmlns.jcp.org/jsf/html"
+xmlns:p="http://xmlns.jcp.org/jsf/core"
+xmlns:f="http://primefaces.org/ui"
+xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+template="../template/template.xhtml">
+<ui:define name="conteudo">
+<f:panel header=" Generos" >
+<h:form id="formCad" enctype="multipart/form-data">
+<f:panel header="Cadastro de Generos" style="width:300px;margin:auto;" >
+<h:panelGrid columns="2" id="painel">
+<f:outputLabel value="Nome"/>
+<f:inputText value="#{generoBean.genero.nome}" placeholder="Digite o genero" required="true" requiredMessage="Campo Obrigatorio!!"/>
+</h:panelGrid>
+<h:panelGrid columns="2">
+<p:facet name="footer">
+<f:commandButton value="Cadastrar" actionListener="#{generoBean.salvar}" update=":mensagem :formTable:table :formCad:painel"></f:commandButton>
+</p:facet>
+</h:panelGrid>
+</f:panel>
+</h:form>
+<h:form  id="formTable">
+<f:dataTable emptyMessage="Dados não encontrados"  value="#{generoBean.generos}" var="genero" paginator="true" id="table" rows="4">
+<p:facet name="header">  <f:outputLabel value="Tabela de Generos"/></p:facet>
+<f:column headerText="Nome do Genero" filterBy="#{genero.nome}">
+<f:outputLabel value="#{genero.nome}"/>
+</f:column>
+<f:column headerText="Opções">
+<f:commandButton icon="ui-icon-trash" update=":formTable:table" actionListener="#{generoBean.excluir}">
+<f:confirm icon="ui-icon-alert" message="Dejeja exluir o Genero #{genero.nome}?" header="Confirmação"/>
+<p:attribute value="#{genero}" name="excluir"/>
+</f:commandButton>
+<f:commandButton icon="ui-icon-pencil" actionListener="#{generoBean.editar}" update=":formCad:painel">
+<p:attribute name="editar" value="#{genero}"/>
+</f:commandButton>
+</f:column>
+</f:dataTable>
+<f:confirmDialog global="true">
+<f:commandButton  icon="ui-icon-check" styleClass="ui-confirmdialog-yes" type="button" value="Sim"></f:commandButton>
+<f:commandButton  icon="ui-icon-close" styleClass="ui-confirmdialog-no" type="button" value="Não"></f:commandButton>
+</f:confirmDialog>
+
+</h:form>
+
+</f:panel>
+</ui:define>
+></ui:composition>

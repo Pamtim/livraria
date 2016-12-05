@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://xmlns.jcp.org/jsf/core"> 
+
+<h:head></h:head> 
+<body> 
+<f:growl id="mensagem"/>
+<f:panel header="Estoque de Livros">
+<h:form id="formTable">
+<f:dataTable  paginator="true" paginatorPosition="top" rows="10" value="#{estoqueBean.estoques}" var="livro" >
+<p:facet name="header"> 
+<f:outputLabel value="Livros"/>
+</p:facet>
+<p:facet name="footer">
+<f:commandButton value="Adicionar livro" actionListener="#{estoqueBean.instaci()}" oncomplete="PF('cadastro').show();" update=":mensagem :formCad"/>
+</p:facet>
+<f:column headerText="Descrição" filterBy="#{livro.livro.nome}">
+<f:outputLabel value="#{livro.livro.nome}"/>
+</f:column>
+<f:column headerText="Valor Unitario">
+<f:outputLabel value="R$ #{livro.livro.valor}0"/>
+</f:column>
+<f:column headerText="Quantidade">
+<f:outputLabel value="#{livro.quantidade}"/>
+</f:column>
+<f:column headerText="Opção">
+<f:commandButton icon="ui-icon-pencil" actionListener="#{estoqueBean.editar}" update=":mensagem :formTable :formEdit" onclick="PF('atualiza').show();">
+<p:attribute value="#{livro}" name="edita"/>
+</f:commandButton>
+<f:commandButton icon="ui-icon-trash" actionListener="#{estoqueBean.remover}" update=":mensagem :formTable">
+ <p:attribute value="#{livro}" name="remover"/>
+</f:commandButton>
+</f:column>
+
+</f:dataTable>
+</h:form >
+</f:panel>
+<f:dialog header="Adicionar Livro no Estoque" draggable="false" resizable="false" modal="true" widgetVar="cadastro">
+<h:form id="formCad">
+<h:panelGrid columns="2">
+<f:outputLabel value="Livro" for="liv"/>
+<f:selectOneMenu filter="true" value="#{estoqueBean.idLivro}" required="true" id="liv" requiredMessage="Livro Obrigatorio">
+<p:selectItem itemLabel="Selecione um Livro" noSelectionOption="true"/>
+<p:selectItems value="#{estoqueBean.livros}" var="est" itemLabel="#{est.nome}" itemValue="#{est.id}"/>
+</f:selectOneMenu>
+<f:outputLabel value="Quantidade"/>
+<f:inputText value="#{estoqueBean.estoque.quantidade}"/>
+</h:panelGrid>
+<h:panelGrid columns="2">
+<f:commandButton value="Adicionar" actionListener="#{estoqueBean.adicionar()}" onstart="PF('gif').show()" onsuccess="PF('gif').hide();" update=":formTable :formCad :mensagem"/>
+<f:commandButton  value="Cancelar" onclick="PF('cadastro').hide();" type="reset"/>
+</h:panelGrid>
+</h:form>
+</f:dialog>
+<f:dialog header="Atualizar Livro no Estoque" draggable="false" resizable="false" modal="true" widgetVar="atualiza">
+<h:form id="formEdit">
+<h:panelGrid columns="2">
+<f:outputLabel value="Livro" for="li"/>
+<f:selectOneMenu filter="true" value="#{estoqueBean.idLivro}" required="true" id="li" requiredMessage="Livro Obrigatorio">
+<p:selectItem itemLabel="Selecione um Livro" noSelectionOption="true"/>
+<p:selectItems value="#{estoqueBean.livros}" var="est" itemLabel="#{est.nome}" itemValue="#{est.id}"/>
+</f:selectOneMenu>
+<f:outputLabel value="Quantidade"/>
+<f:inputText value="#{estoqueBean.estoque.quantidade}"/>
+</h:panelGrid>
+<h:panelGrid columns="2">
+<f:commandButton value="Adicionar" actionListener="#{estoqueBean.addEditar}" onstart="PF('gif').show()" onsuccess="PF('gif').hide();" update=":formTable :formEdit :mensagem"/>
+<f:commandButton  value="Cancelar" onclick="PF('atualiza').hide();" type="reset"/>
+</h:panelGrid>
+</h:form>
+</f:dialog>
+<f:dialog draggable="false" modal="true" resizable="false" closable="false" widgetVar="gif">
+<h:panelGrid columns="1">
+<f:graphicImage library="imagem" name="carrega.gif"/>
+<f:outputLabel value="#{estoqueBean.statu}"/>
+</h:panelGrid>
+</f:dialog>
+</body> 
+</html>

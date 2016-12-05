@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+xmlns:h="http://xmlns.jcp.org/jsf/html"
+xmlns:f="http://primefaces.org/ui"
+xmlns:c="http://xmlns.jcp.org/jsf/core"
+xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+template="../template/template.xhtml">
+>
+<ui:define name="conteudo">
+<h:form id="formTable">
+<f:panel header="Listagem de Autores">
+<f:commandButton value="Novo"  actionListener="#{autorBean.novo}" style="position:relative;left:600px;" onclick="PF('dialog').show();"></f:commandButton>
+
+<f:dataTable emptyMessage="Dados não encontrados" paginatorPosition="top" id="table" paginator="true"   value="#{autorBean.autores}" var="autor"  rows="5">
+<c:facet name="header">
+<f:outputLabel value="Tabela de Autores" />
+</c:facet>
+<f:column headerText="Nome" filterBy="#{editora.nome}">
+<f:outputLabel value="#{autor.nome}"/>
+</f:column>
+
+<f:column headerText="CPF" >
+<f:outputLabel value="#{autor.cpf}"/>
+</f:column>
+<f:column headerText="Email">
+<f:outputLabel value="#{autor.email}"/>
+</f:column>
+<f:column headerText="Opções">
+<f:commandButton  icon="ui-icon-trash" actionListener="#{autorBean.excluir}" update=":mensagem :formTable:table">
+<f:confirm header="Confrimação" message="Deseja excluir a editora #{autor.nome}?" icon="ui-icon-alert" />
+<c:attribute value="#{autor}" name="excluir"/>
+</f:commandButton>
+<f:commandButton icon="ui-icon-pencil" actionListener="#{autorBean.editar}" oncomplete="PF('dialog').show()" update=":formCad:painel">
+<c:attribute value="#{autor}" name="editar"/>
+</f:commandButton>
+</f:column >
+</f:dataTable>
+<f:confirmDialog global="true">
+<f:commandButton value="Sim" type="button" icon="ui-icon-check" styleClass="ui-confirmdialog-yes"></f:commandButton>
+<f:commandButton value="Não" type="button" icon="ui-icon-close" styleClass="ui-confirmdialog-no"></f:commandButton>
+</f:confirmDialog>
+</f:panel>
+</h:form>
+<f:dialog header="Cadastro de Autor" widgetVar="dialog" draggable="false" resizable="false" modal="true">
+<h:form id="formCad">
+<h:panelGrid columns="2" id="painel">
+<f:outputLabel value="Nome" for="autor"/>
+<f:inputText  value="#{autorBean.autor.nome}" id="autor" placeholder="Digite o nome" required="true" requiredMessage="O campo Nome é Obrigatorio"/>
+<f:outputLabel value="CPF" for="cpf"/>
+<f:inputMask mask="999.999.999-99" placeholder="Digite o CPf" required="true" value="#{autorBean.autor.cpf}" requiredMessage="O campo 'CPf' é Obrigatorio" id="cpf"></f:inputMask>
+<f:outputLabel value="Email" for="email"/>
+<f:inputText value="#{autorBean.autor.email}" id="email"/>
+</h:panelGrid>
+<h:panelGrid columns="2">
+<f:commandButton value="Salvar" actionListener="#{autorBean.salvar}" onstart="PF('gif').show();" onsuccess="PF('gif').hide();" update=":mensagem :formCad:painel :formTable:table"></f:commandButton>
+<f:commandButton value="Fechar" oncomplete="PF('dialog').hide()"></f:commandButton>
+</h:panelGrid>
+</h:form>
+<f:outputLabel value="O caampo que tiver o caracter '*' é Obrigatorio" style="color:red;"/>
+</f:dialog>
+<f:dialog draggable="false" modal="true" resizable="false" closable="false" widgetVar="gif">
+<h:panelGrid columns="1">
+<f:graphicImage library="imagem" name="carrega.gif"/>
+<f:outputLabel value="#{estoqueBean.statu}"/>
+</h:panelGrid>
+</f:dialog>
+</ui:define>
+</ui:composition>

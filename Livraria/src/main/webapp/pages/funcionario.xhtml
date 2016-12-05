@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://primefaces.org/ui"
+      xmlns:p="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      template="/template/template.xhtml"> 
+<ui:define name="conteudo">
+<f:panel  header="Cadastro de Funcionario" visible="true"  style="width:900px; margin:auto;box-shadow:2px 2px 3px rgba(0,0,0,0.5);" >
+<h:form  id="formCad">
+<f:fieldset id="principal"  >
+<f:fieldset legend="Dados Pessoais" style=" background:url(../resources/imagem/user_new.png) no-repeat right;">
+<h:panelGrid columns="5" cellspacing="6" >
+<f:outputLabel value="Nome" for="nome"/>
+<f:inputText id="nome" required="true" value="#{funcionarioBean.funcionario.nome}" size="25" title="Digite o nome Completo do funcionario." requiredMessage=" Nome obrigatorio"/>
+<f:tooltip  for="nome" showEffect="fade" />
+<f:outputLabel value="Endereço" for="end"/>
+<f:inputText id="end" size="22" required="true"  value="#{funcionarioBean.funcionario.endereco}" style="background:rgba(255,255,255,0.5);"/>
+<f:tooltip for="end" value="Digite seu Enderecço(Rua)" showEffect="fade"/>
+</h:panelGrid>
+<h:panelGrid columns="4" cellspacing="10">
+<f:outputLabel value="CPF" for="cpf"/>
+<f:inputMask  id="cpf" value="#{funcionarioBean.funcionario.cpf}" mask="999.999.999-99" required="true" requiredMessage="Por Favor insira o 'CPF'!!" />
+<f:outputLabel value="RG" for="rg"/>
+<f:inputMask mask="" required="true" id="rg" value="#{funcionarioBean.funcionario.rg}"  requiredMessage="Por Favor , Digite o RG!!" style="background:rgba(255,255,255,0.5);"/>
+<f:outputLabel value="Barrio" for="barrio"/>
+<f:inputText id="barrio" required="true" requiredMessage="Por Favor, insira o Barrio" value="#{funcionarioBean.funcionario.barrio}" />
+<f:outputLabel value="Numero" for="num"/>
+<f:inputText id="num" value="#{funcionarioBean.funcionario.numero}" style="background:rgba(255,255,255,0.5);"/>
+<f:outputLabel value="Sexo" for="estado"/>
+
+<f:selectOneRadio required="true" id="estado" value="#{funcionarioBean.funcionario.sexo}" requiredMessage="Por Favor , Selecione um Genero!" >
+<p:selectItem itemLabel="Masculino" itemValue="M"/>
+<p:selectItem itemLabel="Feminino" itemValue="F" />
+</f:selectOneRadio>
+<f:outputLabel for="comp" value="Complemento" />
+<f:inputText  id="comp" style="background:rgba(255,255,255,0.5);" value="#{funcionarioBean.funcionario.complemento}"/>
+<f:outputLabel for="est" value="Estado"/>
+<f:selectOneMenu  id="est" filter="true" value="#{funcionarioBean.idEstado}">
+<p:selectItem itemLabel="Selecione um estado"/>
+<p:selectItems  value="#{funcionarioBean.estados}" var="estado" itemLabel="#{estado.nome} - #{estado.sigla}" itemValue="#{estado.id}"/>
+<f:ajax listener="#{funcionarioBean.cidadeDados()}" update=":formCad:cid"/>
+</f:selectOneMenu>
+<f:outputLabel for="cid" value="Cidade"  />
+<f:selectOneMenu  id="cid" filter="true" value="#{funcionarioBean.idCidade}" required="true" style="background:rgba(255,255,255,0.5);" requiredMessage="Por Favor , Selecione uma Cidade">
+<p:selectItem itemLabel="Selecione uma Cidade" style="background:rgba(255,255,255,0.5);"/>
+<p:selectItems value="#{funcionarioBean.cidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade.id}"/>
+</f:selectOneMenu>
+</h:panelGrid>
+</f:fieldset>
+<f:fieldset legend="Dados para Contato" >
+<h:panelGrid columns="3" cellspacing="10">
+<f:outputLabel value="Email" for="mail"/>
+<f:inputText id="mail" value="#{funcionarioBean.funcionario.email}" required="true" requiredMessage="Por Favor, insira um Email" size="27"/>
+<f:tooltip value="Por Favor Insira um Email valido"  style="color:red;" showEffect="fade" for="mail"/>
+<f:outputLabel value="Telefone" for="tele"/>
+<f:inputMask mask="(99)99999-9999" required="true" value="#{funcionarioBean.funcionario.telefone}" id="tele" requiredMessage="Por Favor , Insira um telefone "/>
+</h:panelGrid>
+</f:fieldset>
+<f:fieldset legend="Dados da Empresa" >
+<h:panelGrid columns="2" cellspacing="10">
+<f:outputLabel value="Data de Admissão" for="data" />
+<f:calendar   navigator="true" value="#{funcionarioBean.funcionario.admissão}" maxdate="12-12-2020"  id="data" placeholder="MM/dd/yyyy"  required="true" requiredMessage="A data de Admissão é Obrigatoria!!">
+<p:convertDateTime /></f:calendar>
+<f:outputLabel for="cadt" value="Numero C. de Trabalho"/>
+<f:inputText id="cadt" value="#{funcionarioBean.funcionario.numeroCat}" required="true" requiredMessage=" Por Favor , Insera o numero da carteira de Trabalho" />
+</h:panelGrid>
+</f:fieldset>
+<h:panelGrid columns="2" cellpadding="10" style="padding-left:270px;">
+<f:commandButton value="Cadastrar" onstart="PF('gif').show();" onsuccess="PF('gif').hide();" actionListener="#{funcionarioBean.salvar()}" update=":formCad:principal :mensagem"/>
+<f:commandButton value="Limpar" type="reset"></f:commandButton>
+</h:panelGrid>
+</f:fieldset>
+</h:form>
+</f:panel>
+<f:dialog draggable="false" modal="true" resizable="false" closable="false" widgetVar="gif">
+<h:panelGrid columns="1">
+<f:graphicImage library="imagem" name="carrega.gif"/>
+<f:outputLabel value="#{estoqueBean.statu}"/>
+</h:panelGrid>
+</f:dialog>
+</ui:define>
+</ui:composition>

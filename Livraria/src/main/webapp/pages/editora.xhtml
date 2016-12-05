@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:h="http://xmlns.jcp.org/jsf/html"
+xmlns:f="http://primefaces.org/ui"
+xmlns:c="http://xmlns.jcp.org/jsf/core">
+<h:head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Editora</title>
+</h:head>
+<h:body>
+<div id="cabeçãlho">
+ <f:carousel numVisible="1" headerText="Banners" effect="easeInStrong" style="width:1200;" autoPlayInterval="5000">
+ <f:graphicImage library="imagem" name="livros1.png" width="1200px" height="400px;"></f:graphicImage>
+  <f:graphicImage library="imagem" name="livros2.jpg" width="1200px" height="400px"></f:graphicImage>
+   <f:graphicImage library="imagem" name="logo.png" width="1200px" height="400px"></f:graphicImage>
+</f:carousel>
+<div id="menu">
+<h:form>
+<f:menubar>
+<f:submenu label="Arquivo"></f:submenu>
+<f:submenu label="Cadastro">
+<f:menuitem value="Cliente" url="cliente.xhtml"/>
+<f:menuitem value="Estado" url="estados.xhtml"/>
+<f:menuitem value="Cidade" url="cidade.xhtml"/>
+<f:menuitem value="Genero" url="genero.xhtml"/>
+<f:menuitem value="Autor" url="autor.xhtml"/>
+<f:menuitem value="Livro" url="Livro.xhtml"/>
+
+</f:submenu>
+<f:submenu label="Venda"></f:submenu>
+<f:submenu label="Fale Conosco"></f:submenu>
+<f:submenu label="Sobre"></f:submenu>
+<c:facet name="options">
+<f:commandButton icon="ui-icon-extlink" value="Login" style="margin-right:10px;"></f:commandButton>
+</c:facet>
+</f:menubar>
+</h:form>
+</div>
+</div>
+<f:growl id="mensagem"/>
+<h:form id="formTable">
+<f:panel header="Listagem de Editoras">
+<f:commandButton value="Novo"  actionListener="#{editoraBean.novo}" style="position:relative;left:600px;" onclick="PF('dialog').show();"></f:commandButton>
+
+<f:dataTable emptyMessage="Dados não encontrados" id="table" paginator="true" value="#{editoraBean.editoras}" var="editora" rows="5">
+<c:facet name="header">
+<f:outputLabel value="Tabela de Editotas" />
+</c:facet>
+<f:column headerText="Nome" filterBy="#{editora.nome}">
+<f:outputLabel value="#{editora.nome}"/>
+</f:column>
+<f:column headerText="Email">
+<f:outputLabel value="#{editora.email}"/>
+</f:column>
+<f:column headerText="Opções">
+<f:commandButton  icon="ui-icon-trash" actionListener="#{editoraBean.excluir}" update=":mensagem :formTable:table">
+<f:confirm header="Confrimação" message="Deseja excluir a editora #{editora.nome}?" icon="ui-icon-alert"/>
+<c:attribute value="#{editora}" name="excluir"/>
+</f:commandButton>
+<f:commandButton icon="ui-icon-pencil" actionListener="#{editoraBean.editar}" update=":formCad:painel" onclick="PF('dialog').show();">
+<c:attribute name="editar" value="#{editora}"/>
+</f:commandButton>
+</f:column >
+</f:dataTable>
+<f:confirmDialog global="true">
+<f:commandButton value="Sim" type="button" icon="ui-icon-check" styleClass="ui-confirmdialog-yes"></f:commandButton>
+<f:commandButton value="Não" type="button" icon="ui-icon-close" styleClass="ui-confirmdialog-no"></f:commandButton>
+</f:confirmDialog>
+</f:panel>
+</h:form>
+<f:dialog header="Cadastro de Editora" widgetVar="dialog" draggable="false" resizable="false" modal="true">
+<h:form id="formCad">
+<h:panelGrid columns="2" id="painel">
+<f:outputLabel value="Nome" for="editora"/>
+<f:inputText  value="#{editoraBean.editora.nome}" id="editora" placeholder="Digite o nome" required="true" requiredMessage="O campo Nome é Obrigatorio"/>
+<f:outputLabel value="Email" for="email"/>
+<f:inputText value="#{editoraBean.editora.email}" id="email" placeholder="Digite o Email" required="true" requiredMessage="O campo Email é Obrigatorio" />
+</h:panelGrid>
+<h:panelGrid columns="2">
+<f:commandButton value="Salvar" actionListener="#{editoraBean.salvar}" update=":mensagem :formCad:painel :formTable:table"></f:commandButton>
+<f:commandButton value="Fechar" oncomplete="PF('dialog').hide()"></f:commandButton>
+</h:panelGrid>
+</h:form>
+<f:outputLabel value="O caampo que tiver o caracter '*' é Obrigatorio" style="color:red;"/>
+</f:dialog>
+</h:body>
+</html>

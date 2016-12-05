@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      template="/template/template.xhtml">
+       
+<ui:define name="conteudo">
+<f:fieldset id="principal">
+<f:fieldset id="cadastro" legend="Cadastro de Usuario" style=" width:600px;margin:auto;" >
+
+<h:form id="formCad" >
+<h:panelGrid columns="2" cellspacing="10" id="painel" style="margin:auto;">
+<f:outputLabel for="fun" value="Funcionario"/>
+<f:selectOneMenu id="fun" required="true" filter="true" value="#{usuarioBean.idFuncionario}" requiredMessage=" Por Favor ,Selecione um Funcionario !">
+<c:selectItem itemLabel="Selecione um Funcionario" noSelectionOption="true"/>
+<c:selectItems value="#{usuarioBean.funcionarios}" var="funcionario" itemLabel="#{funcionario.nome}" itemValue="#{funcionario.id}" />
+</f:selectOneMenu>
+<f:outputLabel for="senha" value="Senha:"/> 
+<f:password id="senha" required="true" value="#{usuarioBean.usuario.senha}"  requiredMessage="Pro Favor , Insira uma senha."/>
+<f:outputLabel value="Tipo" for="tipo"  />
+<f:selectOneRadio id="tipo" required="true" value="#{usuarioBean.usuario.tipo}" requiredMessage="Por Favor Selecione uma tipo de Usuario">
+<c:selectItem itemValue="A" itemLabel="Administrador"/>
+<c:selectItem itemValue="G" itemLabel="Gerente"/>
+<c:selectItem itemValue="V" itemLabel="Vendedor"/>
+</f:selectOneRadio>
+<f:outputLabel value="Ativado" for="ativo"/>
+<f:selectBooleanCheckbox value="#{usuarioBean.usuario.statu}" id="ativo" />
+
+</h:panelGrid>
+<h:panelGrid columns="2" cellspacing="9" style="margin:auto;">
+<f:commandButton value="Cadastrar" actionListener="#{usuarioBean.salvar()}" update=":formCad :mensagem :formTable:table"/>
+<f:commandButton value="Limpar"/>
+</h:panelGrid>
+</h:form>
+</f:fieldset>
+<f:fieldset legend="Dados">
+<h:form>
+<f:commandButton id="md" onclick="$('#tabela').slideToggle();"  style="background:orange;box-shadow:2px 2px 3px rgba(0,0,0,0.4);border:1px solid black;hover:color:blue;" value="Ocultar/Mostrar"></f:commandButton> 
+</h:form>
+<div id="tabela">
+
+<h:form id="formTable">
+
+<f:panel header="Listagem de Usuarios">
+<f:dataTable emptyMessage="Dados não Encontrado" value="#{usuarioBean.usuarios}" var="usuario" paginator="true" paginatorPosition="top" id="table">
+<f:column headerText="Nome">
+<f:outputLabel value="#{usuario.funcionario.nome}"/>
+</f:column>
+<f:column headerText="CPF">
+<f:outputLabel value="#{usuario.funcionario.cpf}"/>
+</f:column>
+<f:column headerText="Statu">
+<f:outputLabel value="#{usuario.format()}" />
+</f:column>
+<f:column headerText="Opções">
+<f:commandButton icon="ui-icon-pencil" actionListener="#{usuarioBean.editar}" update=":formCad :formCad:fun :mensagem">
+<c:attribute value="#{usuario}" name="editar"/>
+</f:commandButton>
+<f:commandButton icon="ui-icon-trash" actionListener="#{usuarioBean.excluir(usuario.id)}" update="formTable:table :mensagem">
+<f:confirm header="Confirmação" message="Deseja Excluir o Usuario #{usuario.funcionario.nome} ? " icon="ui-icon-alert"/>
+</f:commandButton>
+</f:column>
+</f:dataTable>
+</f:panel>
+<f:confirmDialog  global="true">
+<f:commandButton type="button" icon="ui-icon-check" styleClass="ui-confirmdialog-yes" value="Sim" />
+<f:commandButton type="button" icon="ui-icon-close" styleClass="ui-confirmdialog-no" value="Não"/>
+</f:confirmDialog>
+</h:form>
+</div>
+</f:fieldset>
+</f:fieldset>
+</ui:define>
+</ui:composition>

@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" >
+<h:head>
+<title>Sistema de Livraria</title>
+<h:outputScript library="js" name="locale.js"></h:outputScript>
+</h:head>
+<h:body>
+<div id="cabeçãlho">
+ <p:carousel numVisible="1"  effect="easeInStrong" style="width:1300px; height:300px;"  autoPlayInterval="7000">
+ <p:graphicImage library="imagem" name="livros1.png" width="1300px" height="300px;"></p:graphicImage>
+ <p:graphicImage library="imagem" name="livros2.jpg" width="1300px" height="300px"></p:graphicImage>
+ <p:graphicImage library="imagem" name="logo.png" width="1300px" height="300px"></p:graphicImage>
+</p:carousel>
+<div id="menu">
+<h:form>
+<p:menubar>
+<p:menuitem label="Arquivo" url="principal.xhtml"/>
+<p:submenu label="Cadastro" rendered="#{autenticacaoBean.acesso(['A','G'])}">
+<p:submenu label="Pessoa">
+<p:menuitem value="Cliente" url="cliente.xhtml"/>
+<p:menuitem value="Funcionario" url="funcionario.xhtml"/>
+<p:menuitem value="Usuario" url="usuario.xhtml"/>
+</p:submenu>
+<p:submenu label="Dados">
+<p:menuitem value="Estado" url="estados.xhtml"/>
+<p:menuitem value="Cidade" url="cidade.xhtml"/>
+</p:submenu>
+<p:submenu label="Systema">
+<p:menuitem value="Genero" url="genero.xhtml"/>
+<p:menuitem value="Autor" url="Autor.xhtml"/>
+<p:menuitem value="Livro" url="Livro.xhtml"/>
+</p:submenu>
+
+</p:submenu>
+<p:submenu label="Venda">
+<p:menuitem value="Caixa" url="caixa.xhtml"/>
+</p:submenu>
+<p:menuitem value="Estoque" url="estoque.xhtml"  rendered="#{autenticacaoBean.acesso(['A','B'])}"/>
+<p:submenu label="Fale Conosco"></p:submenu>
+<p:submenu label="Relatorios" rendered="#{autenticacaoBean.acesso(['A','G'])}">
+<p:menuitem value="Relatorio de Estoque" actionListener="#{relatorioBean.livro}" onstart="PF('gif').show();" onsuccess="PF('gif').hide();" />
+</p:submenu>
+<p:submenu label="Sobre"></p:submenu>
+<c:facet name="options">
+<p:splitButton  value="#{autenticacaoBean.usuariologado.funcionario.nome}"  style="margin-right:10px;">
+<p:graphicImage width="90px" height="90px"/>
+<p:menuitem value="Perfil" icon="ui-icon-person" oncomplete="PF('perfil').show();"/>
+<p:menuitem value="Alterar" icon="ui-icon-pencil"/>
+<p:menuitem value="Configurações" icon="ui-icon-gear"/>
+<p:menuitem value="logof" icon="ui-icon-cancel" actionListener="#{autenticacaoBean.destruir()}"/>
+</p:splitButton>
+</c:facet>
+</p:menubar>
+</h:form>
+</div>
+</div>
+<p:growl id="mensagem"/>
+<div id="conteudo">
+<ui:insert name="conteudo">
+</ui:insert>
+</div>
+<div id="rotape">
+<p:panel header="VF Livraria" style="height:0px;  background:blue;" closable="false"></p:panel>
+</div>
+<p:dialog draggable="false" modal="true" width="500px" widgetVar="perfil" resizable="false" header="Perfil">
+<h:form>
+
+<p:graphicImage library="perfil" style="position:relative; left:90px;" name="sem_foto_m.png" width="200px" height="200px" title="Foto de Perfil"/>
+<br></br>
+<br></br>
+<h:panelGrid columns="2">
+<p:outputLabel value="Nome: " style="color:orange;"/>
+<p:outputLabel value="#{autenticacaoBean.usuariologado.funcionario.nome}"/>
+<p:outputLabel value="Email: " style="color:orange;"/>
+<p:outputLabel value="#{autenticacaoBean.usuariologado.funcionario.email}"/>
+<p:outputLabel value="Tipo de usuario: " style="color:orange;"/>
+<p:outputLabel value="#{autenticacaoBean.usuariologado.tipoform()}"/>
+</h:panelGrid>
+<br></br>
+<br></br>
+<h:panelGrid >
+ <p:commandButton value="Fechar" onclick="PF('perfil').hide();" />
+</h:panelGrid>
+</h:form>
+</p:dialog>
+<p:dialog draggable="false" modal="true" resizable="false" closable="false" widgetVar="gif">
+<h:panelGrid columns="1">
+<p:graphicImage library="imagem" name="carrega.gif"/>
+<p:outputLabel value="Gerando Relatorio de Estoque"/>
+</h:panelGrid>
+</p:dialog>
+</h:body>
+</html>
